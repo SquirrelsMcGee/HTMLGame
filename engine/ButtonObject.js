@@ -5,6 +5,8 @@ class ButtonObject extends DisplayableObject {
         this.stroke = "blue";
         this.highlightStroke = "red";
         this.hover = false;
+        this.audio = new Audio('./ding.mp3');
+        this.counter = 0;
     }
     
     async draw(stroke) {
@@ -31,7 +33,8 @@ class ButtonObject extends DisplayableObject {
     }
     
     click() {
-        setTimeout("alert('clicked a button');", 1);
+        setTimeout("alert('counter = " + (this.counter++) + "');", 1);
+        this.audio.play();
     }
     
     isPointInside(x, y) {
