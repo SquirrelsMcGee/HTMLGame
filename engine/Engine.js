@@ -55,13 +55,37 @@ class Engine {
         this.contextData.drawImage(temp_canvas, 0, 0);
     }
     
-    keyHandler(e) {
+    handleMouseDown(e) {
+        if (this.running) {
+            for (var i = 0; i < this.objects.length; i++) {
+                if (!this.objects[i].clickable) continue;
+                if (this.objects[i].isPointInside(e.offsetX, e.offsetY)) {
+                    this.objects[i].click();
+                }
+            }
+        } else {
+            drawImageAtMouse(e.offsetX, e.offsetY);
+        }
+    }
+
+
+    handleMouseMove(e) {
+        if (this.running) {
+            for (var i = 0; i < this.objects.length; i++) {
+                if (!this.objects[i].clickable) continue;
+                this.objects[i].hover = this.objects[i].isPointInside(e.offsetX, e.offsetY);
+            }
+        }
+    }
+
+    
+    handleKey(e) {
         if (e.type == "keydown") {
             switch(e.keyCode) {
                 case 13: {
                     // enter key
                     if (this.running) this.stop();
-                    else engine.run();
+                    else this.run();
                     break;
                 }
                 case 32: {

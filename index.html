@@ -4,6 +4,7 @@
 <script src="./engine/Engine.js"></script>
 <script src="./engine/DisplayableObject.js"></script>
 <script src="./engine/SpaceshipObject.js"></script>
+<script src="./engine/ButtonObject.js"></script>
 
 <script>
 var image_paths = [
@@ -30,13 +31,20 @@ var game_data = {
 
 var engine = new Engine();
 var character = new SpaceshipObject();
+var button = new ButtonObject();
 
 engine.canvasSize = {w: window.innerWidth, h: window.innerHeight};
 engine.resize();
+engine.contextData.font = "30px Arial";
+
 character.setImage("./ship2.png").then(console.log("ok"));
 character.position = {x: 0, y: 0};
+
+button.position = {x: window.innerWidth/2, y: 100};
+button.dimensions = {w: 30, h: 20};
+
 engine.objects.push(character);
-engine.contextData.font = "30px Arial";
+engine.objects.push(button);
 
 var txt = "click/drag/tap to draw a boy" + "\n"
         + "middle click to toggle rainbow mode (sorry mobile users u suck lmao)" + "\n"
@@ -71,11 +79,11 @@ window.addEventListener("resize", function() {
 });
 
 window.addEventListener("keydown", function(e) {
-    engine.keyHandler(e);
+    engine.handleKey(e);
 }, true);
 
 window.addEventListener("keyup", function(e) {
-    engine.keyHandler(e);
+    engine.handleKey(e);
 }, true);
 
 
@@ -105,9 +113,11 @@ engine.canvasData.addEventListener("touchend", function(e) {
 }, {passive: true});
 
 engine.canvasData.addEventListener("mousemove", function(e) {
-    if (game_data._clicking) {
+    if (game_data._clicking && !engine.running) {
         //drawSquareAtMouse(e.offsetX, e.offsetY);
         drawImageAtMouse(e.offsetX, e.offsetY);
+    } else {
+        engine.handleMouseMove(e);
     }
 }, false);
 
@@ -121,8 +131,10 @@ engine.canvasData.addEventListener("touchmove", function(e) {
 
 
 engine.canvasData.addEventListener("click", function(e) {
-    drawImageAtMouse(e.offsetX, e.offsetY);
+    engine.handleMouseDown(e);
 }, false);
+
+
 
 
 </script>
