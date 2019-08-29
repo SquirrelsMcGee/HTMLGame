@@ -6,9 +6,17 @@
 <script src="./engine/SpaceshipObject.js"></script>
 
 <script>
-var images = [
+var image_paths = [
     "./img.gif", "./img2.gif", "./img.png", "./img.jpg"
 ];
+var images = [];
+
+for (var i = 0; i < image_paths.length; i++) {
+    let img = new Image();
+    img.src = image_paths[i];
+    images[i] = img;
+    img.onload = () => { img.setAttribute("loaded", "true") };
+}
 
 var game_data = {
     backgroundColor: "#ffffff",
@@ -39,7 +47,7 @@ var y = 50;
 var lineheight = 35;
 var lines = txt.split('\n');
 
-for (var i = 0; i<lines.length; i++)
+for (var i = 0; i < lines.length; i++)
     engine.contextData.fillText(lines[i], x, y + (i*lineheight) );
 
 function drawSquareAtMouse(x, y) {
@@ -49,16 +57,12 @@ function drawSquareAtMouse(x, y) {
     engine.contextData.stroke();
 }
 
-function drawImageAtMouse(x, y) {
-    var img = new Image();
-    img.src = images[game_data._imgIndex];
+async function drawImageAtMouse(x, y) {
+    var img = images[game_data._imgIndex];
     var width = height = 100;
-    img.onload = function() {
-        if (game_data._colors) engine.contextData.filter = "grayscale(100%) sepia(100%) hue-rotate(" + x + "deg) brightness(0.9) contrast(1.2)"; //
-        engine.contextData.drawImage(img, x-(width/2), y-(height/2), width, height);
-        if (game_data._colors) engine.contextData.filter = "none";
-
-    }
+    if (game_data._colors) engine.contextData.filter = "grayscale(100%) sepia(100%) hue-rotate(" + x + "deg) brightness(0.9) contrast(1.2)"; //
+    engine.contextData.drawImage(img, x-(width/2), y-(height/2), width, height);
+    if (game_data._colors) engine.contextData.filter = "none";
 }
 
 window.addEventListener("resize", function() {

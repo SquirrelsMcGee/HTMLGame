@@ -3,7 +3,7 @@ class SpaceshipObject extends DisplayableObject {
         super();
     }
     
-    draw() {
+    async draw() {
         super.draw();
         
         let w = 100; let h = 100;
@@ -15,7 +15,7 @@ class SpaceshipObject extends DisplayableObject {
         engine.contextData.restore();
     }
     
-    update() {
+    async update() {
         super.update();
         
         var keys = game_data._arrowKeys;

@@ -20,11 +20,11 @@ class DisplayableObject {
         
     }
     
-    draw() {
+    async draw() {
         // Default draw() stub
     }
     
-    update() {
+    async update() {
         // Default update() stub
     }
     
