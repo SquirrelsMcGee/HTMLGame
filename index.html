@@ -3,6 +3,7 @@
 
 <script src="./engine/Engine.js"></script>
 <script src="./engine/DisplayableObject.js"></script>
+<script src="./engine/SpaceshipObject.js"></script>
 
 <script>
 var images = [
@@ -20,7 +21,7 @@ var game_data = {
 };
 
 var engine = new Engine();
-var character = new DisplayableObject();
+var character = new SpaceshipObject();
 
 engine.canvasSize = {w: window.innerWidth, h: window.innerHeight};
 engine.resize();

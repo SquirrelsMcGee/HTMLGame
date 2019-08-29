@@ -8,14 +8,10 @@ class Engine {
         this.runLoop = null;
         this.running = false;
         this.resize();
+        this.tickrate = 1; 
     }
     
-    initialise() {
-        
-    }
-    
-    // I had to use a setInterval here because it lagged running at max while loop speeds
-    
+    // I had to use a setInterval here because it lagged running at while-loop speeds    
     run() {
         if (this.runLoop != null) return;
         this.running = true;
@@ -32,7 +28,7 @@ class Engine {
                 item.update();
                 item.draw();
             });
-        }, 1);
+        }, this.tickrate);
     }
     
     stop() {
