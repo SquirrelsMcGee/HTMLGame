@@ -4,6 +4,7 @@
 <script src="./engine/Engine.js"></script>
 <script src="./engine/DisplayableObject.js"></script>
 <script src="./engine/SpaceshipObject.js"></script>
+<script src="./engine/EnemyObject.js"></script>
 <script src="./engine/ButtonObject.js"></script>
 
 <script>
@@ -31,6 +32,7 @@ var game_data = {
 
 var engine = new Engine();
 var character = new SpaceshipObject();
+var enemy = new EnemyObject();
 var button = new ButtonObject();
 
 engine.canvasSize = {w: window.innerWidth, h: window.innerHeight};
@@ -39,11 +41,17 @@ engine.contextData.font = "30px Arial";
 
 character.setImage("./ship2.png").then(console.log("ok"));
 character.position = {x: 0, y: 0};
+character.dimensions = {w: 100, h: 100};
+
+enemy.setImage("./img.png").then(console.log("ok"));
+enemy.position = {x: window.innerWidth/2, y: window.innerHeight/2};
+enemy.dimensions = {w: 100, h: 100};
 
 button.position = {x: window.innerWidth/2, y: 100};
 button.dimensions = {w: 30, h: 20};
 
 engine.objects.push(character);
+engine.objects.push(enemy);
 engine.objects.push(button);
 
 var txt = "click/drag/tap to draw a boy" + "\n"

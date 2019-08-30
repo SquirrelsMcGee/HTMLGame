@@ -1,6 +1,13 @@
-class SpaceshipObject extends DisplayableObject {
+class EnemyObject extends DisplayableObject {
     constructor() {
         super();
+        
+        this.keys = {
+            left:   Math.floor(Math.random() * 2),
+            right:  Math.floor(Math.random() * 2),
+            up:     Math.floor(Math.random() * 2),
+            down:   Math.floor(Math.random() * 2)
+        };
     }
     
     async draw() {
@@ -18,16 +25,24 @@ class SpaceshipObject extends DisplayableObject {
     async update() {
         super.update();
         
-        var keys = game_data._arrowKeys;
-        //console.log(this.position);
+
+        var changeDirection = Math.floor(Math.random() * 200) == 50;
+        if (changeDirection) {
+            this.keys = {
+                left:   Math.floor(Math.random() * 2),
+                right:  Math.floor(Math.random() * 2),
+                up:     Math.floor(Math.random() * 2),
+                down:   Math.floor(Math.random() * 2)
+            };
+        }
+        var keys = this.keys;
+        //console.log(changeDirection);
         
         if (keys.left)  this.velocity.vx -= this.rate;
         if (keys.right) this.velocity.vx += this.rate;
         if (keys.up)    this.velocity.vy -= this.rate;
         if (keys.down)  this.velocity.vy += this.rate;
         
-        this.position.x += this.velocity.vx;
-        this.position.y += this.velocity.vy;
         
         if (this.velocity.vx > this.maxSpeed) this.velocity.vx = this.maxSpeed;
         if (this.velocity.vx < -this.maxSpeed) this.velocity.vx = -this.maxSpeed;
@@ -59,7 +74,15 @@ class SpaceshipObject extends DisplayableObject {
         if (keys.up && keys.right)      this.direction = 45;
         if (keys.down && keys.left)     this.direction = -135;
         if (keys.down && keys.right)    this.direction = 135;
+        
+        console.log (this.position.x + this.velocity.vx + this.dimensions.w);
+        if ((this.position.x + this.velocity.vx + this.dimensions.w) > engine.canvasSize.w) { this.velocity.vx *= -1; }
+        if ((this.position.y + this.velocity.vy + this.dimensions.h) > engine.canvasSize.h) { this.velocity.vy *= -1; }
+        if ((this.position.x + this.velocity.vx) < 0) { this.velocity.vx *= -1; }
+        if ((this.position.y + this.velocity.vy) < 0) { this.velocity.vy *= -1; }
+        
+        this.position.x += this.velocity.vx;
+        this.position.y += this.velocity.vy;
     }
-    
     
 }
