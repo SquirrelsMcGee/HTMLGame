@@ -32,8 +32,16 @@ var game_data = {
 
 var engine = new Engine();
 var character = new SpaceshipObject();
-var enemy = new EnemyObject();
+var enemies = [];
 var button = new ButtonObject();
+
+for (var i=0; i<5; i++) {
+    enemies[i] = new EnemyObject();
+    enemies[i].setImage("./img.gif").then(console.log("ok"));
+    enemies[i].position = {x: window.innerWidth/2, y: window.innerHeight/2};
+    enemies[i].dimensions = {w: 100, h: 100};
+    engine.objects.push(enemies[i]);
+}
 
 engine.canvasSize = {w: window.innerWidth, h: window.innerHeight};
 engine.resize();
@@ -43,15 +51,10 @@ character.setImage("./ship2.png").then(console.log("ok"));
 character.position = {x: 0, y: 0};
 character.dimensions = {w: 100, h: 100};
 
-enemy.setImage("./img.png").then(console.log("ok"));
-enemy.position = {x: window.innerWidth/2, y: window.innerHeight/2};
-enemy.dimensions = {w: 100, h: 100};
-
 button.position = {x: window.innerWidth/2, y: 100};
 button.dimensions = {w: 30, h: 20};
 
 engine.objects.push(character);
-engine.objects.push(enemy);
 engine.objects.push(button);
 
 var txt = "click/drag/tap to draw a boy" + "\n"
@@ -100,12 +103,16 @@ document.body.addEventListener('touchmove', function (event) {
 }, false);
 
 engine.canvasData.addEventListener("mousedown", function(e) {
+    if (engine.running) {
+        engine.handleMouseDown(e);
+        return;
+    }
     if (e.button == 1) {
         game_data._colors = !game_data._colors;
         return;
     } else if (e.button == 0) {
         game_data._clicking = true;
-    }    
+    }
 }, false);
 
 engine.canvasData.addEventListener("touchstart", function(e) {
@@ -113,6 +120,10 @@ engine.canvasData.addEventListener("touchstart", function(e) {
 }, {passive: true});
 
 engine.canvasData.addEventListener("mouseup", function(e) {
+    if (engine.running) {
+        engine.handleMouseUp(e);
+        return;
+    }
     game_data._clicking = false;
 }, false);
 
@@ -139,7 +150,7 @@ engine.canvasData.addEventListener("touchmove", function(e) {
 
 
 engine.canvasData.addEventListener("click", function(e) {
-    engine.handleMouseDown(e);
+    engine.handleClick(e);
 }, false);
 
 

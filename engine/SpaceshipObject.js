@@ -1,6 +1,7 @@
 class SpaceshipObject extends DisplayableObject {
     constructor() {
         super();
+        this.clickable = false;
     }
     
     async draw() {
@@ -33,32 +34,30 @@ class SpaceshipObject extends DisplayableObject {
         if (this.velocity.vx < -this.maxSpeed) this.velocity.vx = -this.maxSpeed;
         if (this.velocity.vy > this.maxSpeed) this.velocity.vy = this.maxSpeed;
         if (this.velocity.vy < -this.maxSpeed) this.velocity.vy = -this.maxSpeed;
+
         
-        
-        // No keys being pressed, decrease velocity
-        if (! (keys.left || keys.right )) {            
-            if (this.velocity.vx > 0) this.velocity.vx -= this.rate/2;
-            if (this.velocity.vx < 0) this.velocity.vx += this.rate/2;
-        }
-        
-        if (! (keys.up || keys.down)) {
-            if (this.velocity.vy > 0) this.velocity.vy -= this.rate/2;
-            if (this.velocity.vy < 0) this.velocity.vy += this.rate/2;
-        }
+        // Decrease velocity over time
+        if (this.velocity.vx > 0) this.velocity.vx -= this.rate/2;
+        if (this.velocity.vx < 0) this.velocity.vx += this.rate/2;
+        if (this.velocity.vy > 0) this.velocity.vy -= this.rate/2;
+        if (this.velocity.vy < 0) this.velocity.vy += this.rate/2;
+
         
         this.velocity.vx = Math.round(this.velocity.vx * 1000) / 1000;
         this.velocity.vy = Math.round(this.velocity.vy * 1000) / 1000;
-        
+
         // Get direction facing
-        if (keys.left)  this.direction = -90;
-        if (keys.right) this.direction = 90;
-        if (keys.up)    this.direction = 0;
-        if (keys.down)  this.direction = 180;
+        if (keys.left && !keys.right)   this.direction = -90;
+        if (keys.right && !keys.left)   this.direction = 90;
+        if (keys.up && !keys.down)      this.direction = 0;
+        if (keys.down && !keys.up)      this.direction = 180;
         
-        if (keys.up && keys.left)       this.direction = -45;
-        if (keys.up && keys.right)      this.direction = 45;
-        if (keys.down && keys.left)     this.direction = -135;
-        if (keys.down && keys.right)    this.direction = 135;
+        if (keys.up && keys.left    && !(keys.down  || keys.right)) this.direction = -45;
+        if (keys.up && keys.right   && !(keys.down  || keys.left )) this.direction = 45;
+        if (keys.down && keys.left  && !(keys.up    || keys.right)) this.direction = -135;
+        if (keys.down && keys.right && !(keys.up    || keys.left )) this.direction = 135;
+        
+        if (keys.left && keys.up && keys.down && keys.right) this.direction = 0;
     }
     
     

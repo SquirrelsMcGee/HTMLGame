@@ -1,12 +1,13 @@
 class ButtonObject extends DisplayableObject {
     constructor() {
         super();
-        this.clickable = true;
+        
         this.stroke = "blue";
         this.highlightStroke = "red";
-        this.hover = false;
         this.audio = new Audio('./ding.mp3');
         this.counter = 0;
+        
+        this.clickable = true;
     }
     
     async draw(stroke) {
@@ -15,7 +16,7 @@ class ButtonObject extends DisplayableObject {
         engine.contextData.save();
         engine.contextData.beginPath();
         engine.contextData.fillStyle = "blue";
-        engine.contextData.strokeStyle = this.hover ? this.highlightStroke : this.stroke;
+        engine.contextData.strokeStyle = this.mouseOver ? this.highlightStroke : this.stroke;
         engine.contextData.lineWidth = 5;
         engine.contextData.rect(this.position.x, this.position.y, this.dimensions.w, this.dimensions.h);
         engine.contextData.stroke();
@@ -25,7 +26,7 @@ class ButtonObject extends DisplayableObject {
     
     async update() {
         super.update();
-        if (this.hover) {
+        if (this.mouseOver) {
             engine.canvasData.style.cursor = "pointer";
         } else {
             engine.canvasData.style.cursor = "auto";
@@ -33,15 +34,12 @@ class ButtonObject extends DisplayableObject {
     }
     
     click() {
-        setTimeout("alert('counter = " + (this.counter++) + "');", 1);
-        this.audio.play();
-    }
-    
-    isPointInside(x, y) {
-        return (   x >= this.position.x 
-                && x <= this.position.x + this.dimensions.w 
-                && y >= this.position.y 
-                && y <= this.position.y + this.dimensions.h);
-    }
-    
+        //setTimeout("alert('counter = " + (this.counter++) + "');", 1);
+        //this.audio.play();
+        
+        let c = engine.canvasData;
+        let d = c.toDataURL("image/png");
+        let w = window.open('about:blank','image from canvas');
+        w.document.write("<img src='"+d+"' alt='from canvas'/>");
+    }    
 }

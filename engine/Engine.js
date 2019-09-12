@@ -9,6 +9,8 @@ class Engine {
         this.running = false;
         this.resize();
         this.tickrate = 1; 
+        
+        this.clickIndex = -1;
     }
     
     // I had to use a setInterval here because it lagged running at while-loop speeds    
@@ -55,16 +57,46 @@ class Engine {
         this.contextData.drawImage(temp_canvas, 0, 0);
     }
     
+    handleClick(e) {
+        if (this.running) {
+            for (var i = 0; i < this.objects.length; i++) {
+                if (!this.objects[i].clickable) continue;
+                if (this.objects[i].isPointInside(e.offsetX, e.offsetY)) {
+                    
+                }
+            }
+        } else {
+            drawImageAtMouse(e.offsetX, e.offsetY);
+        }
+    }
+    
     handleMouseDown(e) {
         if (this.running) {
             for (var i = 0; i < this.objects.length; i++) {
                 if (!this.objects[i].clickable) continue;
                 if (this.objects[i].isPointInside(e.offsetX, e.offsetY)) {
-                    this.objects[i].click();
+                    if (this.clickIndex == -1 && e.button == 0) {
+                        this.clickIndex = i;
+                        this.objects[i].mouseDown = true;
+                    }
                 }
             }
-        } else {
-            drawImageAtMouse(e.offsetX, e.offsetY);
+        }
+    }
+    
+    handleMouseUp(e) {
+        if (this.running) {
+            for (var i = 0; i < this.objects.length; i++) {
+                if (!this.objects[i].clickable) continue;
+                if (this.objects[i].isPointInside(e.offsetX, e.offsetY)) {
+                    console.log(i, this.clickIndex);
+                    if (this.objects[i].mouseDown && e.button == 0) {
+                        this.clickIndex = -1;
+                        this.objects[i].mouseDown = false;
+                        if (this.objects[i].clickable) this.objects[i].click();
+                    }
+                }
+            }
         }
     }
 
@@ -73,7 +105,11 @@ class Engine {
         if (this.running) {
             for (var i = 0; i < this.objects.length; i++) {
                 if (!this.objects[i].clickable) continue;
-                this.objects[i].hover = this.objects[i].isPointInside(e.offsetX, e.offsetY);
+                this.objects[i].mouseOver = this.objects[i].isPointInside(e.offsetX, e.offsetY);
+                if (this.objects[i].mouseDown) {
+                    this.objects[i].mouseMove(e);
+                    //console.log(i);
+                }
             }
         }
     }
@@ -147,3 +183,15 @@ class Engine {
         }
     }
 }
+
+
+function array_move(arr, old_index, new_index) {
+    if (new_index >= arr.length) {
+        var k = new_index - arr.length + 1;
+        while (k--) {
+            arr.push(undefined);
+        }
+    }
+    arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+    return arr; // for testing
+};
