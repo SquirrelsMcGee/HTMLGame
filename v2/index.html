@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+</body>
+
+<!--
+    Script imports
+-->
+
+<!--
+    Load base scripts first
+-->
+<script src="./js/InputManager.js"></script>
+<script src="./js/Engine.js"></script>
+<script src="./js/AssetDB.js"></script>
+<script src="./js/Scene.js"></script>
+<script src="./js/Square.js"></script>
+
+<!--
+    Load derived classes
+-->
+<script src="./js/ExampleScene.js"></script>
+
+<script type="text/javascript">
+    /* Main Entry Point */
+
+    const gameEngine = new Engine( () => {
+        return (document.getElementById("canvas"));
+    });
+    const exampleScene = new ExampleScene();
+
+    gameEngine.setScene(exampleScene);
+
+    document.body.innerHTML += "<br>";
+
+    // Retrieving simple assets from the db
+    for (var i = 0; i < exampleScene.getAssetCount(); i++) {
+        let asset = exampleScene.findAsset("asset" + i);
+        if (asset != null) document.body.innerHTML += asset;
+    }
+
+    let script0 = exampleScene.findAsset("script0");
+    script0();
+
+    // Testing invalid asset key
+    let probablyNull = exampleScene.findAsset("does_not_exist");
+    document.body.innerHTML += "<br>probablyNull = "+ (probablyNull === null);
+
+    gameEngine.start();
+
+</script>
+
+</html>
