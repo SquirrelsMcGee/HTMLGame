@@ -2,10 +2,10 @@ class ExampleScene extends Scene {
     constructor() {
         super();
 
-        this.init();
+        this.setup();
     }
 
-    init() {
+    setup() {
         // Boilerplate testing
         // Adding simple assets to the db
         for (var i = 0; i < 10; i++) {

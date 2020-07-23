@@ -27,6 +27,7 @@
     Load derived classes
 -->
 <script src="./js/ExampleScene.js"></script>
+<script src="./js/RandomPoints.js"></script>
 
 <script type="text/javascript">
     /* Main Entry Point */
@@ -35,8 +36,15 @@
         return (document.getElementById("canvas"));
     });
     const exampleScene = new ExampleScene();
+    const randomPoints = new RandomPoints();
 
-    gameEngine.setScene(exampleScene);
+    const scenes = [
+        exampleScene,
+        randomPoints
+    ];
+    var sceneId = 1;
+
+    gameEngine.setScene(scenes[sceneId]);
 
     document.body.innerHTML += "<br>";
 
