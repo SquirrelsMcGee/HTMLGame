@@ -64,6 +64,9 @@ class InputManager {
         this.engine = engine;
 
         this.mousePos = { x: 0, y: 0 };
+        this.mousePosPrev = { x: 0, y: 0 };
+
+        this.mouseVelocity = { x: 0, y: 0 };
 
         // Event Listeners for Input mapping
         document.addEventListener('keydown', (e) => { this.keyDown(e); } );
@@ -96,9 +99,16 @@ class InputManager {
             return;
         }
 
-        // Set mouse position
+        // Set previous mouse position
+        this.mousePosPrev = Object.assign({}, this.mousePos);
+
+        // Set new mouse position
         this.mousePos.x = e.offsetX;
         this.mousePos.y = e.offsetY;
+
+        // Calculate mouse velocity
+        this.mouseVelocity.x = this.mousePos.x - this.mousePosPrev.x;
+        this.mouseVelocity.y = this.mousePos.y - this.mousePosPrev.y;
     }
 
     mouseDown(e) {

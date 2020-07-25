@@ -64,9 +64,10 @@ class PlayerObject extends GameObject {
             this.transform.position.x = this.engine.inputManager.mousePos.x - 25;
             this.transform.position.y = this.engine.inputManager.mousePos.y - 25;
             this.velocity.y = 0;
+            //this.velocity.x = this.velocity.y = -this.engine.inputManager.mouseVelocity.y * 3;
+            //this.velocity.x = this.velocity.x = this.engine.inputManager.mouseVelocity.x * 3;
             return;
         }
-
         // Clamp velocity to maximal/minimal values
         this.clampVelocity();
 
@@ -82,6 +83,11 @@ class PlayerObject extends GameObject {
 
         // Apply screen bounds checks
         this.clampBoundary();
+
+        if (this.isGrounded) {
+            if (this.velocity.x > 0) this.velocity.x -= 0.075;
+            if (this.velocity.x < 0) this.velocity.x += 0.075;
+        }
     }
 
     inBounds(vector) {

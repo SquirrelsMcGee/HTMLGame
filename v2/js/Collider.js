@@ -59,7 +59,7 @@ class RectCollider extends Collider {
 }
 
 class CircleCollider extends Collider {
-    constructor(gameObject, circleRadius, circleCentre) {
+    constructor(gameObject, circleRadius) {
         super(gameObject);
 
         this.type = ColliderType.CIRCLE;
@@ -68,7 +68,14 @@ class CircleCollider extends Collider {
         if (circleCentre == undefined) circleCentre == gameObject.transform.position;
 
         this.radius = circleRadius;
-        this.centre = circleCentre;
+        //this.centre = circleCentre;
+    }
+
+    get centre() {
+        let centre = { x: 0, y: 0 };
+        centre.x = this.parent.transform.position.x + this.radius;
+        centre.y = this.parent.transform.position.y + this.radius;
+        return centre;
     }
 }
 
@@ -103,7 +110,7 @@ var ColliderType = {
     LINE: 64,
     POLYGON: 1024
 };
-//Object.freeze(ColliderType);
+Object.freeze(ColliderType);
 
 var ColliderPairs = {
     [ColliderType.NONE + ColliderType.NONE]      :  NONE_NONE,       // 0 0      0
@@ -127,22 +134,80 @@ var ColliderPairs = {
     [ColliderType.LINE + ColliderType.LINE]      :  LINE_LINE        // 64 64    128
 };
 
-function NONE_NONE() {return "NONE_NONE"}
-function NONE_POINT() {return "NONE_POINT"}
-function NONE_RECT() {return "NONE_RECT"}
-function NONE_CIRCLE() {return "NONE_CIRCLE"}
-function NONE_LINE() {return "NONE_LINE"}
+function NONE_ANY() { return [false, false]; }
 
-function POINT_POINT() {return "POINT_POINT"}
-function POINT_RECT() {return "POINT_RECT"}
-function POINT_CIRCLE() {return "POINT_CIRCLE"}
-function POINT_LINE() {return "POINT_LINE"}
+function NONE_NONE(c1, c2)      { return NONE_ANY(); }
+function NONE_POINT(c1, c2)     { return NONE_ANY(); }
+function NONE_RECT(c1, c2)      { return NONE_ANY(); }
+function NONE_CIRCLE(c1, c2)    { return NONE_ANY(); }
+function NONE_LINE(c1, c2)      { return NONE_ANY(); }
 
-function RECT_RECT() {return "RECT_RECT"}
-function RECT_CIRCLE() {return "RECT_CIRCLE"}
-function RECT_LINE() {return "RECT_LINE"}
+function POINT_POINT(c1, c2) {
+    return (
+        (c1.parent.transform.position.x == c2.parent.transform.position.x) &&
+        (c1.parent.transform.position.y == c2.parent.transform.position.y)
+    );
+}
+function POINT_RECT(c1, c2) {
+    let point, rect;
 
-function CIRCLE_CIRCLE() {return "CIRCLE_CIRCLE"}
-function CIRCLE_LINE() {return "CIRCLE_LINE"}
+    if (c1.type == ColliderType.POINT) {
+        point = c1;
+        rect = c2;
+    }
+    else {
+        point = c2;
+        rect = c1;
+    }
 
-function LINE_LINE() {return "LINE_LINE"}
+    return (
+        (point.parent.transform.position.x >= rect.parent.transform.position.x) &&
+        (point.parent.transform.position.x <= rect.parent.transform.position.x + rect.size.width) &&
+        (point.parent.transform.position.y >= rect.parent.transform.position.y) &&
+        (point.parent.transform.position.y <= rect.parent.transform.position.y + rect.size.height)
+    );
+}
+function POINT_CIRCLE(c1, c2) {
+    let point, circle;
+
+    if (c1.type == ColliderType.POINT) {
+        point = c1;
+        circle = c2;
+    }
+    else {
+        point = c2;
+        circle = c1;
+    }
+
+    let distX = (point.parent.transform.position.x - circle.centre.x);
+    let distY = (point.parent.transform.position.y - circle.centre.y);
+
+    let distance = Math.sqrt( (distX * distX) + (distY * distY) );
+    return (
+        distance <= circle.radius
+    );
+}
+function POINT_LINE(c1, c2) {return "POINT_LINE"}
+
+function RECT_RECT(c1, c2) {
+    // No need for type check here
+    let p1 = c1.parent.transform.position;
+    let p2 = c2.parent.transform.position;
+    let s1 = c1.size;
+    let s2 = c2.size;
+
+    return (
+        (p1.x + s1.width >= p2.x) &&
+        (p1.x <= p2.x + s2.width) &&
+        (p1.y + s1.height >= p2.y) &&
+        (p1.y <= p2.y + s2.height)
+    );
+
+}
+function RECT_CIRCLE(c1, c2) {return "RECT_CIRCLE"}
+function RECT_LINE(c1, c2) {return "RECT_LINE"}
+
+function CIRCLE_CIRCLE(c1, c2) {return "CIRCLE_CIRCLE"}
+function CIRCLE_LINE(c1, c2) {return "CIRCLE_LINE"}
+
+function LINE_LINE(c1, c2) {return "LINE_LINE"}

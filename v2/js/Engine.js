@@ -18,6 +18,12 @@ class Engine {
 
         this.initialise();
 
+        //this.dataBox = null;
+
+    }
+
+    get dataBox() {
+        return document.getElementById("dataField");
     }
 
     initialise() {
@@ -53,6 +59,8 @@ class Engine {
         this.ctx.beginPath();
         this.ctx.rect(this.inputManager.mousePos.x -2, this.inputManager.mousePos.y -2, 4, 4);
         this.ctx.stroke();
+
+        //this.dataBox.innerHTML = "x:" + this.inputManager.mouseVelocity.y +" , y: " + this.inputManager.mouseVelocity.y;
     }
 
     clearRenderBuffer() {
