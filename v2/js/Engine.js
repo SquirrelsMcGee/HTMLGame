@@ -14,6 +14,8 @@ class Engine {
 
         this.startTime = Date.now();
 
+        this.tickRate = 10;
+
         this.initialise();
 
     }
@@ -40,7 +42,7 @@ class Engine {
 
     start() {
         this.state = EngineStates.RUNNING;
-        this.runLoop = setInterval(() => this.updateLoop(), 10);
+        this.runLoop = setInterval(() => this.updateLoop(), this.tickRate);
     }
 
     updateLoop() {

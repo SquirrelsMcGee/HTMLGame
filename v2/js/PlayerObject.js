@@ -16,6 +16,7 @@ class PlayerObject extends GameObject {
         //this.active = false;
 
         this.isHover = false;
+        this.isClicked = false;
 
         return this;
     }
@@ -41,15 +42,29 @@ class PlayerObject extends GameObject {
         if (this.engine.inputManager.getInput("KeyD")) {
             this.velocity.x += 0.2;
         }
+
         this.isHover = this.inBounds(this.engine.inputManager.mousePos);
 
         if (this.isHover) {
             this.color = "#FF0000";
-            if (this.engine.inputManager.activeInputs.Mouse0) {
+            if (this.engine.inputManager.activeInputs["Mouse0"]) {
+                this.isClicked = true;
                 console.log("clicky clicky");
+            }
+            else {
+                this.isClicked = false;
             }
         } else {
             this.color = "#000000";
+            //this.isClicked = false;
+        }
+
+
+        if (this.isClicked) {
+            this.transform.position.x = this.engine.inputManager.mousePos.x - 25;
+            this.transform.position.y = this.engine.inputManager.mousePos.y - 25;
+            this.velocity.y = 0;
+            return;
         }
 
         // Clamp velocity to maximal/minimal values

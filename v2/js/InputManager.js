@@ -49,11 +49,16 @@ class InputManager {
             "ArrowLeft": false,
             "ArrowRight": false,
 
-            "Mouse0": false, // Left click
-            "Mouse1": false, // Middle click
-            "Mouse2": false, // Right click
-            "Mouse3": false, // Browser-back
-            "Mouse4": false // Browser-forward
+            "Mouse0": false, // Left mouse down
+            "Mouse1": false, // Middle mouse down
+            "Mouse2": false, // Right mouse down
+            "Mouse3": false, // Browser-back mouse down
+            "Mouse4": false, // Browser-forward mouse down
+
+            // Click flags only active immediately after the mouse button goes up
+            "MouseClick0": false,   // Left mouse click (Mouse up)
+            "MouseClick1": false,   // Middle mouse click (Mouse up)
+            "MouseClick2": false   // Right mouse click (Mouse up)
         };
 
         this.engine = engine;
@@ -114,6 +119,10 @@ class InputManager {
 
         // Set mouse up
         this.activeInputs["Mouse" + e.button] = false;
+
+        this.activeInputs["MouseClick" + e.button] = true;
+
+        setTimeout(() => { this.activeInputs["MouseClick" + e.button] = false; }, this.engine.tickRate);
 
         // Debug
         //console.log("mouseUp: Mouse" + e.button);
