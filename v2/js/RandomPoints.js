@@ -1,6 +1,6 @@
 class RandomPoints extends Scene {
-    constructor() {
-        super();
+    constructor(engine) {
+        super(engine);
 
         this.positions = [];
 
@@ -14,23 +14,19 @@ class RandomPoints extends Scene {
         }
     }
 
-    render(engine, ctx) {
-        //console.log("ExampleScene Rendering");
-        //this.assetDB.find("square0").draw(engine, ctx);
+    render() {
         for (var i = 0; i < 500; i++ ) {
-            //console.log(this.positions[i].x, this.positions[i].y, this.positions[i].c);
-            //console.log(this.positions[i].c);
-            ctx.beginPath();
-            ctx.lineWidth = 10;
-            ctx.strokeStyle = "" + this.positions[i].c;
-            ctx.fillStyle = "" + this.positions[i].c;
-            ctx.fillRect(this.positions[i].x - 10, this.positions[i].y - 10, 20, 20); // fill in the pixel at (10,10)
-            ctx.stroke();
+            this.engine.ctx.beginPath();
+            this.engine.ctx.lineWidth = 10;
+            this.engine.ctx.strokeStyle = "" + this.positions[i].c;
+            this.engine.ctx.fillStyle = "" + this.positions[i].c;
+            this.engine.ctx.fillRect(this.positions[i].x - 10, this.positions[i].y - 10, 20, 20); // fill in the pixel at (10,10)
+            this.engine.ctx.stroke();
         }
     }
 
-    update(engine, ctx, time) {
-        //this.assetDB.find("square0").update(engine, ctx, time);
+    update(time) {
+
     }
 
 }

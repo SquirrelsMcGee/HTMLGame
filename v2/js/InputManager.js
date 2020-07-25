@@ -1,6 +1,8 @@
 class InputManager {
 
     constructor(engine) {
+
+        // Input map <Name, state>
         this.activeInputs = {
             "KeyQ": false,
             "KeyW": false,
@@ -58,7 +60,7 @@ class InputManager {
 
         this.mousePos = { x: 0, y: 0 };
 
-        // Event Listeners for Input
+        // Event Listeners for Input mapping
         document.addEventListener('keydown', (e) => { this.keyDown(e); } );
         document.addEventListener('keyup', (e) => { this.keyUp(e); } );
         document.addEventListener('mousemove', (e) => { this.mouseMove(e); }, false);
@@ -85,6 +87,7 @@ class InputManager {
         // Check position is within canvas bounds
         if (e.target != this.engine.canvas) {
             // Not over canvas
+            //console.log(e.target);
             return;
         }
 

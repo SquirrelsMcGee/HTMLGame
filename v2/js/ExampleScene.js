@@ -29,7 +29,7 @@ class ExampleScene extends Scene {
         player2.translate( {x: 100, y: 0} );
 
 
-        this.destroy(player2, 2000);
+        this.destroy(player2, 0);
 
         //let s1 = new OldSquare();
         //let s2 = new OldSquare();

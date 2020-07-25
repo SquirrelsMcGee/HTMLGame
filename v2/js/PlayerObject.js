@@ -15,6 +15,8 @@ class PlayerObject extends GameObject {
 
         //this.active = false;
 
+        this.isHover = false;
+
         return this;
     }
 
@@ -39,6 +41,16 @@ class PlayerObject extends GameObject {
         if (this.engine.inputManager.getInput("KeyD")) {
             this.velocity.x += 0.2;
         }
+        this.isHover = this.inBounds(this.engine.inputManager.mousePos);
+
+        if (this.isHover) {
+            this.color = "#FF0000";
+            if (this.engine.inputManager.activeInputs.Mouse0) {
+                console.log("clicky clicky");
+            }
+        } else {
+            this.color = "#000000";
+        }
 
         // Clamp velocity to maximal/minimal values
         this.clampVelocity();
@@ -55,6 +67,18 @@ class PlayerObject extends GameObject {
 
         // Apply screen bounds checks
         this.clampBoundary();
+    }
+
+    inBounds(vector) {
+        let minx = (vector.x >= this.transform.position.x);
+        let maxx = (vector.x <= this.transform.position.x + this.size.width);
+        let miny = (vector.y >= this.transform.position.y);
+        let maxy = (vector.y <= this.transform.position.y + this.size.height);
+
+        let bx = minx && maxx;
+        let by = miny && maxy;
+
+        return bx && by;
     }
 
     draw() {

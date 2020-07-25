@@ -7,7 +7,7 @@ class Engine {
         this.currentScene = null;
 
         this._canvas = canvas;
-        this.canvas.width = 500;
+        this.canvas.width = 1000;
         this.canvas.height = 500;
 
         this.inputManager = null;
@@ -47,6 +47,10 @@ class Engine {
         this.clearRenderBuffer();
         this.currentScene.update(this.time);
         this.currentScene.render();
+
+        this.ctx.beginPath();
+        this.ctx.rect(this.inputManager.mousePos.x -2, this.inputManager.mousePos.y -2, 4, 4);
+        this.ctx.stroke();
     }
 
     clearRenderBuffer() {
