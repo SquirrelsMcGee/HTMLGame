@@ -8,6 +8,11 @@
 
 <body>
     <canvas id="canvas"></canvas>
+    <label for="scene">Scene Id</label>
+    <select name="scene" id="sceneSelect">
+        <option value="0">0</option>
+        <option value="1">1</option>
+    </select>
 </body>
 
 <!--
@@ -17,11 +22,15 @@
 <!--
     Load base scripts first
 -->
-<script src="./js/InputManager.js"></script>
+
 <script src="./js/Engine.js"></script>
+<script src="./js/InputManager.js"></script>
 <script src="./js/AssetDB.js"></script>
 <script src="./js/Scene.js"></script>
-<script src="./js/Square.js"></script>
+<script src="./js/GameObject.js"></script>
+
+
+<script src="./js/OldSquare.js"></script>
 
 <!--
     Load derived classes
@@ -29,20 +38,22 @@
 <script src="./js/ExampleScene.js"></script>
 <script src="./js/RandomPoints.js"></script>
 
+<script src="./js/PlayerObject.js"></script>
+
 <script type="text/javascript">
     /* Main Entry Point */
 
     const gameEngine = new Engine( () => {
         return (document.getElementById("canvas"));
     });
-    const exampleScene = new ExampleScene();
-    const randomPoints = new RandomPoints();
+    const exampleScene = new ExampleScene(gameEngine);
+    const randomPoints = new RandomPoints(gameEngine);
 
     const scenes = [
         exampleScene,
         randomPoints
     ];
-    var sceneId = 1;
+    var sceneId = 0;
 
     gameEngine.setScene(scenes[sceneId]);
 
@@ -63,6 +74,18 @@
 
     gameEngine.start();
 
+    document.getElementById("sceneSelect").addEventListener("change", (e) => {
+        gameEngine.setScene(scenes[parseInt(e.target.value)]);
+    });
+
 </script>
+
+<style>
+
+canvas {
+    border: 1px solid black;
+}
+
+</style>
 
 </html>

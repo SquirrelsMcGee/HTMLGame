@@ -1,8 +1,9 @@
 class Scene {
     // Base class for scenes
 
-    constructor() {
+    constructor(engine) {
         this.assetDB = new AssetDB();
+        this.engine = engine;
         this.gameObjects = [];
 
         this.initialise();
@@ -31,20 +32,38 @@ class Scene {
         return this.assetDB.count;
     }
 
-    render(engine, ctx) {
+    update(time) {
         // Stub, to be implemented
+
+        for (let gameObject of this.gameObjects) {
+            if (gameObject.active) {
+                gameObject.update(time);
+            }
+        }
     }
 
-    update(engine, ctx, time) {
+    render() {
         // Stub, to be implemented
+        for (let gameObject of this.gameObjects) {
+            if (gameObject.active) {
+                gameObject.draw();
+            }
+        }
     }
 
     instantiate(gameObject) {
-        gameObjects.push(gameObject);
+        this.gameObjects.push(gameObject);
     }
 
-    destroy(gameObject) {
-        gameObjects.remove(gameObject);
+    destroy(gameObject, delay) {
+        // Removes given GameObject from the world
+
+        if (delay == undefined) delay = 0;
+        if (delay < 0) delay = 0;
+
+        setTimeout(() => {
+            this.gameObjects.remove(gameObject);
+        }, delay);
     }
 
 }

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<p>Video to use:</p>
+<video id="video1" controls width="270" autoplay loop>
+  <!--<source src="https://upload.wikimedia.org/wikipedia/commons/transcoded/8/88/Big_Buck_Bunny_alt.webm/Big_Buck_Bunny_alt.webm.480p.vp9.webm" type='video/webm'>-->
+  <source src="https://simpl.info/videoalpha/video/dancer1.webm" type='video/webm'>
+</video>
+
+<p>Canvas (the code draws the current frame of the video every 20 milliseconds):</p>
+<canvas id="myCanvas" width="520" height="270" style="border:1px solid #d3d3d3;">
+Your browser does not support the HTML5 canvas tag.</canvas>
+
+<p>Video Rotation:</p>
+<input type="range" min="-180" max="180" value="0" class="slider" id="rotation">
+
+<p>Scale:</p>
+<input type="range" min="-10" max="10" value="1" class="slider" id="scale">
+
+<script>
+var v = document.getElementById("video1");
+var c = document.getElementById("myCanvas");
+
+var rotSlider = document.getElementById("rotation");
+var scaleSlider = document.getElementById("scale");
+
+
+var ctx = c.getContext("2d");
+var i;
+
+var size = { x: v.getBoundingClientRect().width, y: v.getBoundingClientRect().height };
+var rotPos = { rx: 0.5, ry: 0.5 }; // "uv" rotation coordinates
+var pos = { x: 5, y: 5 };
+// Worldspace coordinates of the rotation
+var rotPosWX = size.x * rotPos.rx;
+var rotPosWY = size.y * rotPos.ry;
+
+var theta = 0;
+var xScale = 1;
+
+v.addEventListener("play", function() {
+	i = window.setInterval(function() {
+      // Clear the context
+      ctx.clearRect(0, 0, c.width, c.height);
+
+      ctx.fillRect(50, 50, 50, 50);
+
+      ctx.translate(rotPosWX + pos.x, rotPosWY + pos.y);
+      ctx.rotate(theta * Math.PI / 180);
+      ctx.translate(-rotPosWX,-rotPosWY);
+
+	  if (xScale < 0) {
+      	//console.log(size.x + ((1-xScale) * size.x));
+      	ctx.translate(size.x * -xScale, 0);
+
+      }
+      ctx.scale(xScale, 1);
+      ctx.drawImage(v,0,0,size.x,size.y)
+      ctx.resetTransform();
+  } ,20);
+}, false);
+
+v.addEventListener("pause", function() {window.clearInterval(i);}, false);
+v.addEventListener("ended", function() {clearInterval(i);}, false);
+
+
+rotSlider.addEventListener("input", (e) => { theta = e.target.value; console.log(theta);  });
+scaleSlider.addEventListener("input", (e) => { xScale = e.target.value / 10; console.log(xScale);  });
+
+</script>
+
+</body>
+</html>

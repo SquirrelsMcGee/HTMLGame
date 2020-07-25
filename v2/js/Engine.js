@@ -2,8 +2,6 @@ class Engine {
 
     constructor(canvas) {
 
-        this.self = this;
-        this.inputManager = new InputManager();
         this.state = EngineStates.STOPPED;
         this.runLoop = null;
         this.currentScene = null;
@@ -12,11 +10,20 @@ class Engine {
         this.canvas.width = 500;
         this.canvas.height = 500;
 
+        this.inputManager = null;
+
         this.startTime = Date.now();
+
+        this.initialise();
+
+    }
+
+    initialise() {
+        this.inputManager = new InputManager(this);
     }
 
     get ctx() {
-        return canvas.getContext("2d");
+        return this.canvas.getContext("2d");
     }
 
     get canvas() {
@@ -38,8 +45,8 @@ class Engine {
 
     updateLoop() {
         this.clearRenderBuffer();
-        this.currentScene.update(this.self, this.ctx, this.time);
-        this.currentScene.render(this.self, this.ctx);
+        this.currentScene.update(this.time);
+        this.currentScene.render();
     }
 
     clearRenderBuffer() {

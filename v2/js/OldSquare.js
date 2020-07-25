@@ -1,4 +1,4 @@
-class Square {
+class OldSquare {
     constructor() {
         this.pos = { x: 50, y: 50 };
         this.velocity = { x: 0, y: 0 };
@@ -12,6 +12,8 @@ class Square {
         this.isGrounded = false;
 
         this.deltaTime = 0;
+
+        return this;
     }
 
     setSize(w, h) {
@@ -76,7 +78,7 @@ class Square {
             this.velocity.x += 0.2;
         }
 
-        console.log (this.velocity.x, this.velocity.y);
+        //console.log (this.velocity.x, this.velocity.y);
 
         this.clampVelocity();
 
