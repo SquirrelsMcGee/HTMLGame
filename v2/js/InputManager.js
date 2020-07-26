@@ -74,6 +74,7 @@ class InputManager {
         document.addEventListener('mousemove', (e) => { this.mouseMove(e); }, false);
         document.addEventListener('mousedown', (e) => { this.mouseDown(e); }, false);
         document.addEventListener('mouseup', (e) => { this.mouseUp(e); }, false);
+        document.addEventListener('mouseleave', (e) => { this.mouseLeave(e); }, false);
 
         // Disable context menu for canvas
         document.addEventListener("contextmenu", (e) => { this.contextMenu(e); }, false);
@@ -136,6 +137,10 @@ class InputManager {
 
         // Debug
         //console.log("mouseUp: Mouse" + e.button);
+    }
+
+    mouseLeave(e) {
+        // TO-DO FINISH
     }
 
     // Prevent context menu appearing on canvas

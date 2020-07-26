@@ -18,7 +18,13 @@ class PlayerObject extends GameObject {
         this.isHover = false;
         this.isClicked = false;
 
+        this.addCollider();
+
         return this;
+    }
+
+    addCollider() {
+        this.collider = new RectCollider(this, this.size);
     }
 
     setSize(w, h) {
@@ -57,6 +63,13 @@ class PlayerObject extends GameObject {
         } else {
             this.color = "#000000";
             //this.isClicked = false;
+        }
+
+        if (this.invertX != -1) {
+            if (Collider.detectCollision(this.collider, this.engine.currentScene.gameObjects[1].collider)) {
+                this.color = "#00ffff";
+                console.log("Colliding with arbitrary object");
+            }
         }
 
 
@@ -108,6 +121,8 @@ class PlayerObject extends GameObject {
         this.ctx.strokeStyle = this.color;
         this.ctx.rect(this.transform.position.x, this.transform.position.y, this.size.width, this.size.height);
         this.ctx.stroke();
+
+        this.ctx.strokeStyle = "#000000";
     }
 
 

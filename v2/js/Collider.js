@@ -35,7 +35,22 @@ class Collider {
     static detectCollision(c1, c2) {
         //
         let hash = c1.type + c2.type;
-        let interaction = ColliderPairs.find(hash);
+        let interaction = ColliderPairs[hash];
+
+        let collisionExists = false;
+
+        // If interaction is possible
+        if (interaction != undefined) {
+            collisionExists = interaction(c1, c2);
+        }
+
+        c1.draw(); c2.draw();
+
+        return collisionExists;
+    }
+
+    draw() {
+
     }
 }
 
@@ -43,6 +58,13 @@ class PointCollider extends Collider {
     constructor(gameObject) {
         super(gameObject);
         this.type = ColliderType.POINT;
+    }
+
+    draw() {
+        let ctx = this.parent.engine.ctx;
+        ctx.beginPath();
+        ctx.fillRect(this.parent.transform.position.x - 1, this.parent.transform.position.y -1, 2, 2);
+        ctx.stroke();
     }
 }
 
@@ -63,9 +85,10 @@ class CircleCollider extends Collider {
         super(gameObject);
 
         this.type = ColliderType.CIRCLE;
+        //this.circleCentre = null;
 
         if (circleRadius == undefined) circleRadius = 0;
-        if (circleCentre == undefined) circleCentre == gameObject.transform.position;
+        //if (circleCentre == undefined) circleCentre == gameObject.transform.position;
 
         this.radius = circleRadius;
         //this.centre = circleCentre;
@@ -76,6 +99,17 @@ class CircleCollider extends Collider {
         centre.x = this.parent.transform.position.x + this.radius;
         centre.y = this.parent.transform.position.y + this.radius;
         return centre;
+    }
+
+    draw() {
+        let ctx = this.parent.engine.ctx;
+        ctx.beginPath();
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = "green";
+        ctx.setLineDash([5, 3]);/*dashes are 5px and spaces are 3px*/
+        ctx.arc(this.centre.x, this.centre.y, this.radius, 0, 2*Math.PI);
+        ctx.stroke();
+        ctx.setLineDash([]);
     }
 }
 
@@ -134,7 +168,7 @@ var ColliderPairs = {
     [ColliderType.LINE + ColliderType.LINE]      :  LINE_LINE        // 64 64    128
 };
 
-function NONE_ANY() { return [false, false]; }
+function NONE_ANY() { return false; }
 
 function NONE_NONE(c1, c2)      { return NONE_ANY(); }
 function NONE_POINT(c1, c2)     { return NONE_ANY(); }
@@ -204,10 +238,57 @@ function RECT_RECT(c1, c2) {
     );
 
 }
-function RECT_CIRCLE(c1, c2) {return "RECT_CIRCLE"}
-function RECT_LINE(c1, c2) {return "RECT_LINE"}
+function RECT_CIRCLE(c1, c2) {
+    let rect, circle;
 
-function CIRCLE_CIRCLE(c1, c2) {return "CIRCLE_CIRCLE"}
+    if (c1.type == ColliderType.RECT) {
+        rect = c1;
+        circle = c2;
+    } else {
+        rect = c2;
+        circle = c1;
+    }
+
+    let cx = circle.centre.x;
+    let cy = circle.centre.y;
+
+    let rx = rect.parent.transform.position.x;
+    let ry = rect.parent.transform.position.y;
+    let rw = rect.size.width;
+    let rh = rect.size.height;
+
+    let closestEdgeX = cx;
+    let closestEdgeY = cy;
+
+    if (cx < rx)            { closestEdgeX = rx; }
+    else if (cx > rx+rw)    { closestEdgeX = rx + rw; }
+
+    if (cy < ry)            { closestEdgeY = ry; }
+    else if (cy > ry+rh)    { closestEdgeY = ry + rh; }
+
+    let distX = cx - closestEdgeX;
+    let distY = cy - closestEdgeY;
+
+    let distance = Math.sqrt( (distX*distX) + (distY*distY) );
+
+    return (distance <= circle.radius);
+
+}
+function RECT_LINE(c1, c2) { return "RECT_LINE" }
+
+function CIRCLE_CIRCLE(c1, c2) {
+    // No need for type check here
+
+    let pos1 = c1.transform.position;
+    let pos2 = c2.transform.position;
+
+    let distX = pos1.x - pos2.x;
+    let distY = pos1.y - pos2.y;
+
+    let distance = Math.sqrt( (distX*distX) + (distY*distY) );
+
+    return (distance <= circle.radius);
+}
 function CIRCLE_LINE(c1, c2) {return "CIRCLE_LINE"}
 
 function LINE_LINE(c1, c2) {return "LINE_LINE"}

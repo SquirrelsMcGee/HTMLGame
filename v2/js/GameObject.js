@@ -13,6 +13,9 @@ class GameObject {
             rotation: 0
         }
 
+        // temporary
+        this.invertX = 1;
+
         this.active = true;
 
         this.name = "New GameObject";
@@ -31,7 +34,7 @@ class GameObject {
             throw `GameObject.${this.name}: Cannot translate by malformed vector, ${vector}`;
 
         // Translate coordinates
-        this.transform.position.x += vector.x;
+        this.transform.position.x += vector.x * this.invertX;
         this.transform.position.y -= vector.y;
     }
 

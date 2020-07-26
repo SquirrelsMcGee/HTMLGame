@@ -51,6 +51,19 @@ class Scene {
         }
     }
 
+    drawCursor() {
+
+        let mx = this.engine.inputManager.mousePos.x;
+        let my = this.engine.inputManager.mousePos.y;
+
+        mx += this.engine.inputManager.mouseVelocity.x;
+        my += this.engine.inputManager.mouseVelocity.y;
+
+        this.engine.ctx.beginPath();
+        this.engine.ctx.rect(mx -2, my -2, 4, 4);
+        this.engine.ctx.stroke();
+    }
+
     instantiate(gameObject) {
         this.gameObjects.push(gameObject);
     }

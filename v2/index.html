@@ -47,34 +47,18 @@
 <script type="text/javascript">
     /* Main Entry Point */
 
-    const gameEngine = new Engine( () => {
-        return (document.getElementById("canvas"));
-    });
+    const gameEngine = new Engine( () => { return (document.getElementById("canvas")); } );
+
     const exampleScene = new ExampleScene(gameEngine);
     const randomPoints = new RandomPoints(gameEngine);
 
+    var sceneId = 0;
     const scenes = [
         exampleScene,
         randomPoints
     ];
-    var sceneId = 0;
 
     gameEngine.setScene(scenes[sceneId]);
-
-    document.body.innerHTML += "<br>";
-
-    // Retrieving simple assets from the db
-    for (var i = 0; i < exampleScene.getAssetCount(); i++) {
-        let asset = exampleScene.findAsset("asset" + i);
-        if (asset != null) document.body.innerHTML += asset;
-    }
-
-    let script0 = exampleScene.findAsset("script0");
-    script0();
-
-    // Testing invalid asset key
-    let probablyNull = exampleScene.findAsset("does_not_exist");
-    document.body.innerHTML += "<br>probablyNull = "+ (probablyNull === null);
 
     gameEngine.start();
 

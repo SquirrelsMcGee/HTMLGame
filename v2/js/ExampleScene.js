@@ -15,48 +15,31 @@ class ExampleScene extends Scene {
         // Adding script assets to the db
         this.assetDB.add("script0", () =>{  document.body.innerHTML += "<br>script0 has been called"; });
 
-        // Adding drawable objects
-
-
         let player = new PlayerObject(this.engine);
         let player2 = new PlayerObject(this.engine);
+
+        player2.translate( {x: 200, y: 0} );
+        player2.invertX = -1;
+        //player2.collider.size = {width: 25, height: 50};
+        player2.collider = new CircleCollider(player2, 20);
 
         this.instantiate(player);
         this.instantiate(player2);
 
 
 
-        player2.translate( {x: 100, y: 0} );
-
-
-        this.destroy(player2, 0);
-
-        //let s1 = new OldSquare();
-        //let s2 = new OldSquare();
-
-        //s2.pos = {x: 200, y: 50};
-        //this.assetDB.add("square0", s1);
-        //this.assetDB.add("square1", s2);
-
+        //this.destroy(player2, 0);
     }
 
     update(time) {
         // Using default update order
         super.update(time);
-
-        //this.assetDB.find("square0").update(ctx, time);
-        //this.assetDB.find("square1").update(ctx, time);
-        //this.assetDB.find("player").update(time);
     }
 
 
     render() {
         // Using default rendering order
         super.render();
-
-        //this.assetDB.find("square0").draw(ctx);
-        //this.assetDB.find("square1").draw(ctx);
-        //this.assetDB.find("player").draw();
     }
 
 

@@ -55,10 +55,7 @@ class Engine {
         this.clearRenderBuffer();
         this.currentScene.update(this.time);
         this.currentScene.render();
-
-        this.ctx.beginPath();
-        this.ctx.rect(this.inputManager.mousePos.x -2, this.inputManager.mousePos.y -2, 4, 4);
-        this.ctx.stroke();
+        this.currentScene.drawCursor();
 
         //this.dataBox.innerHTML = "x:" + this.inputManager.mouseVelocity.y +" , y: " + this.inputManager.mouseVelocity.y;
     }
