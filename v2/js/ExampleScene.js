@@ -17,14 +17,22 @@ class ExampleScene extends Scene {
 
         let player = new PlayerObject(this.engine);
         let player2 = new PlayerObject(this.engine);
+        let player3 = new PlayerObject(this.engine);
+
+        player2.name = "P2";
+        player3.name = "P3";
 
         player2.translate( {x: 200, y: 0} );
         player2.invertX = -1;
-        //player2.collider.size = {width: 25, height: 50};
         player2.collider = new CircleCollider(player2, 20);
+
+        player3.translate( {x: 250, y: 0} );
+        player3.invertX = -1;
+        player3.collider = new CircleCollider(player3, 20);
 
         this.instantiate(player);
         this.instantiate(player2);
+        this.instantiate(player3);
 
 
 

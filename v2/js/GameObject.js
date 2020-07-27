@@ -18,6 +18,11 @@ class GameObject {
 
         this.active = true;
 
+        this.collider = null;
+
+        this.colliding = false;
+        this.collidingWith = [];
+
         this.name = "New GameObject";
     }
 
@@ -56,5 +61,43 @@ class GameObject {
     update(time) {
         // this.engine
         // this.ctx
+    }
+
+    detectCollisions() {
+        // Loops through all game objects, finding all objects that are colliding with the attached collider
+        // Check that this object has a collider
+        if (this.collider != null) {
+
+            let collisionDetect = false;
+            let otherCollider = null;
+
+            this.colliding = false;
+            this.collidingWith = []; // Reset list of colliding objects
+
+            // Loop through all game objects in scene
+            for (let otherGameObject of this.engine.currentScene.gameObjects) {
+
+                // Skip if the other GameObject is disabled
+                if (otherGameObject.active == false) continue;
+
+                // Get the other collider
+                otherCollider = otherGameObject.collider;
+                // Check that the other collider exists, and make sure it's not the same as the attached collider
+                if (otherCollider != null && this.collider != otherCollider) {
+
+                    // Set the colliding flag (true if collision, false otherwise)
+                    collisionDetect = Collider.detectCollision(this.collider, otherCollider);
+
+                    // If this collider and the other collider are colliding, add the other gameObject to the list of colliding objects
+                    if (collisionDetect) {
+                        this.colliding = true;
+                        this.collidingWith.push(otherGameObject);
+                    }
+                }
+            }
+        }
+
+        // Return the current colliding flag
+        return this.colliding;
     }
 }

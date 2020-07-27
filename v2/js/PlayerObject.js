@@ -66,10 +66,21 @@ class PlayerObject extends GameObject {
         }
 
         if (this.invertX != -1) {
+
+            if (this.detectCollisions()) {
+                for (let go of this.collidingWith) {
+                    //go.active = false;
+                }
+                console.log(this.collidingWith.map( go => go.name));
+                //console.log(this.collidingWith);
+                this.color = "#00ffff";
+            }
+
+            /*
             if (Collider.detectCollision(this.collider, this.engine.currentScene.gameObjects[1].collider)) {
                 this.color = "#00ffff";
                 console.log("Colliding with arbitrary object");
-            }
+            }*/
         }
 
 
