@@ -13,6 +13,8 @@ class GameObject {
             rotation: 0
         }
 
+        this.freezeAxis = { x: false, y: false };
+
         // temporary
         this.invertX = 1;
 
@@ -39,8 +41,8 @@ class GameObject {
             throw `GameObject.${this.name}: Cannot translate by malformed vector, ${vector}`;
 
         // Translate coordinates
-        this.transform.position.x += vector.x * this.invertX;
-        this.transform.position.y -= vector.y;
+        if (!this.freezeAxis.x) this.transform.position.x += vector.x * this.invertX;
+        if (!this.freezeAxis.y) this.transform.position.y -= vector.y;
     }
 
     rotate(angle) {
@@ -91,7 +93,7 @@ class GameObject {
                     // If this collider and the other collider are colliding, add the other gameObject to the list of colliding objects
                     if (collisionDetect) {
                         this.colliding = true;
-                        this.collidingWith.push(otherGameObject);
+                        this.collidingWith.push( otherGameObject );
                     }
                 }
             }

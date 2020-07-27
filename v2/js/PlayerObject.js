@@ -55,7 +55,7 @@ class PlayerObject extends GameObject {
             this.color = "#FF0000";
             if (this.engine.inputManager.activeInputs["Mouse0"]) {
                 this.isClicked = true;
-                console.log("clicky clicky");
+                //console.log("clicky clicky");
             }
             else {
                 this.isClicked = false;
@@ -64,25 +64,6 @@ class PlayerObject extends GameObject {
             this.color = "#000000";
             //this.isClicked = false;
         }
-
-        if (this.invertX != -1) {
-
-            if (this.detectCollisions()) {
-                for (let go of this.collidingWith) {
-                    //go.active = false;
-                }
-                console.log(this.collidingWith.map( go => go.name));
-                //console.log(this.collidingWith);
-                this.color = "#00ffff";
-            }
-
-            /*
-            if (Collider.detectCollision(this.collider, this.engine.currentScene.gameObjects[1].collider)) {
-                this.color = "#00ffff";
-                console.log("Colliding with arbitrary object");
-            }*/
-        }
-
 
         if (this.isClicked) {
             this.transform.position.x = this.engine.inputManager.mousePos.x - 25;
@@ -96,7 +77,57 @@ class PlayerObject extends GameObject {
         this.clampVelocity();
 
         // Apply velocity to object
-        this.translate(this.velocity);
+        if (this.freeze != true) this.translate(this.velocity);
+
+        // Check collisions
+        if (this.invertX != -1) {
+            if (this.detectCollisions()) {
+                for (let gameObj of this.collidingWith) {
+                    //go.active = false;
+
+                    // To the left of the other collider
+                    let left = this.transform.position.x <= gameObj.transform.position.x;
+                    let right = this.transform.position.x + (this.collider.size.width) >= gameObj.transform.position.x;
+                    let below = this.transform.position.y + (this.collider.size.height) > gameObj.transform.position.y + gameObj.collider.size.height;
+                    let above = this.transform.position.y <= gameObj.transform.position.y;
+
+                    // Above or below the other collider
+                    if (above || below) {
+                        // Block player from moving
+                        this.translate({ x: 0, y: -(this.velocity.y) });
+                    }
+
+                    if (above && !below) {
+                        // on top of object
+                        this.translate({ x: 0, y: -(this.velocity.y) });
+                    }
+                    if (above && below) {
+                        // on side of object
+                        this.translate({ x: -(this.velocity.x), y: 0 });
+                    }
+
+                    if (above && below) {
+                        // below object
+                    }
+
+
+                    console.log(above, below);
+
+
+                    if (left || right) {
+                        this.translate({x: -(this.velocity.x), y: 0});
+                    }
+
+                    if (above) this.isGrounded = true; // If standing on other collider
+                    if (!above) this.isGrounded = false;
+
+                }
+                //console.log(this.collidingWith.map( go => go.name));
+                this.color = "#00ffff";
+            } else {
+                this.isGrounded = false;
+            }
+        }
 
         // Velocity Decay Factors
         if (this.velocity.x > 0) this.velocity.x -= 0.075;
@@ -111,6 +142,12 @@ class PlayerObject extends GameObject {
         if (this.isGrounded) {
             if (this.velocity.x > 0) this.velocity.x -= 0.075;
             if (this.velocity.x < 0) this.velocity.x += 0.075;
+
+            this.velocity.y = 0;
+        }
+
+        if (this.freezeAxis.y == false) {
+            //console.log(this.isGrounded, this.velocity.y);
         }
     }
 

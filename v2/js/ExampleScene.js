@@ -22,9 +22,11 @@ class ExampleScene extends Scene {
         player2.name = "P2";
         player3.name = "P3";
 
-        player2.translate( {x: 200, y: 0} );
+        player2.transform.position = {x: 200, y: 380};
         player2.invertX = -1;
-        player2.collider = new CircleCollider(player2, 20);
+        //player2.collider = new CircleCollider(player2, 20);
+
+        player2.freezeAxis = {x:true, y: true};
 
         player3.translate( {x: 250, y: 0} );
         player3.invertX = -1;
@@ -32,7 +34,7 @@ class ExampleScene extends Scene {
 
         this.instantiate(player);
         this.instantiate(player2);
-        this.instantiate(player3);
+        //this.instantiate(player3);
 
 
 
