@@ -76,58 +76,74 @@ class PlayerObject extends GameObject {
         // Clamp velocity to maximal/minimal values
         this.clampVelocity();
 
-        // Apply velocity to object
-        if (this.freeze != true) this.translate(this.velocity);
-
         // Check collisions
         if (this.invertX != -1) {
             if (this.detectCollisions()) {
                 for (let gameObj of this.collidingWith) {
+
+                    this.translate({x: -(this.velocity.x), y: -this.velocity.y});
+
                     //go.active = false;
 
                     // To the left of the other collider
-                    let left = this.transform.position.x <= gameObj.transform.position.x;
-                    let right = this.transform.position.x + (this.collider.size.width) >= gameObj.transform.position.x;
-                    let below = this.transform.position.y + (this.collider.size.height) > gameObj.transform.position.y + gameObj.collider.size.height;
-                    let above = this.transform.position.y <= gameObj.transform.position.y;
+                    let left = this.transform.position.x + this.collider.size.width <= gameObj.transform.position.x; // Left side
+                    let right = this.transform.position.x > gameObj.transform.position.x;
+                    let below = this.transform.position.y > gameObj.transform.position.y + (gameObj.collider.size.height * 0.5);
+                    let above = this.transform.position.y + this.collider.size.height < gameObj.transform.position.y;
 
-                    // Above or below the other collider
-                    if (above || below) {
-                        // Block player from moving
-                        this.translate({ x: 0, y: -(this.velocity.y) });
+                    //console.log(this.transform.position.y, (gameObj.transform.position.y + gameObj.collider.size.height));
+
+                    console.log(left, right, above, below, this.velocity.y, this.velocity.x);
+
+
+                    if (above) {
+                        this.velocity.y = 0;
+                        this.transform.position.y = gameObj.transform.position.y - this.collider.size.height - 0.5;
+                    } else {
+                        if (below) {
+                            this.velocity.y = 0;
+                            this.transform.position.y = gameObj.transform.position.y + gameObj.collider.size.height + 0.5;
+                        }
+                        if (!below) {
+                            if (left) {
+                                this.transform.position.x = gameObj.transform.position.x - this.collider.size.width - 0.5;
+                            }
+                            if (right) {
+                                this.transform.position.x = gameObj.transform.position.x + gameObj.collider.size.width + 0.5;
+                            }
+                        }
                     }
 
-                    if (above && !below) {
-                        // on top of object
-                        this.translate({ x: 0, y: -(this.velocity.y) });
-                    }
-                    if (above && below) {
-                        // on side of object
-                        this.translate({ x: -(this.velocity.x), y: 0 });
-                    }
 
-                    if (above && below) {
-                        // below object
-                    }
 
+                    /*
+                    if (below) {
+                        this.velocity.y = 0;
+                        this.transform.position.y = gameObj.transform.position.y + gameObj.collider.size.height + 0.5;
+                    }
 
                     console.log(above, below);
-
-
                     if (left || right) {
                         this.translate({x: -(this.velocity.x), y: 0});
                     }
-
-                    if (above) this.isGrounded = true; // If standing on other collider
+                    */
+                    if (above) {
+                        this.isGrounded = true; // If standing on other collider
+                        this.translate( {x: this.velocity.x, y: 0} );
+                    }
                     if (!above) this.isGrounded = false;
 
                 }
                 //console.log(this.collidingWith.map( go => go.name));
-                this.color = "#00ffff";
+                //this.color = "#00ffff";
             } else {
                 this.isGrounded = false;
             }
         }
+
+
+        // Apply velocity to object
+        if (this.freeze != true) this.translate(this.velocity);
 
         // Velocity Decay Factors
         if (this.velocity.x > 0) this.velocity.x -= 0.075;
@@ -186,7 +202,7 @@ class PlayerObject extends GameObject {
             //this.pos.y = 0;
         }
         // Bottom
-        if (this.transform.position.y > this.ctx.canvas.height - this.size.height) {
+        if (this.transform.position.y >= this.ctx.canvas.height - this.size.height) {
             if (this.velocity.x != 0){
                 this.velocity.y = 0;
             }
