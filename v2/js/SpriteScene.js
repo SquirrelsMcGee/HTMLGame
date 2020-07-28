@@ -1,10 +1,11 @@
-class CroppedImageScene extends Scene {
+class SpriteScene extends Scene {
     constructor(engine) {
         super(engine);
 
+        this.name = "Sprite Scene"
 
         this.image = document.createElement('img');
-        this.image.src = "https://i.pinimg.com/originals/5d/25/8c/5d258cb91b51945ee93f32284e3c0744.png";
+        this.image.src = "./img/sprite_walking.png";
         this.imageReady = false;
 
         this.deltaTime = 0;
@@ -32,9 +33,11 @@ class CroppedImageScene extends Scene {
             this.deltaTime = 0;
 
             this.imageIndex += 1;
-            if (this.imageIndex >= 10) this.imageIndex = 0;
+            if (this.imageIndex >= 9) this.imageIndex = 0;
         }
         let x = 10, y = 10;
         this.engine.ctx.drawImage(this.image, this.imageIndex* 64, 0, 64, 128, x, y, 64, 128);
+        this.engine.ctx.drawImage(this.image, 10, 256);
+
     }
 }

@@ -38,7 +38,7 @@
 <!-- Load derived classes -->
 <script src="./js/ExampleScene.js"></script>
 <script src="./js/RandomPoints.js"></script>
-<script src="./js/CroppedImageScene.js"></script>
+<script src="./js/SpriteScene.js"></script>
 
 <script src="./js/PlayerObject.js"></script>
 
@@ -51,21 +51,23 @@
 
     const exampleScene = new ExampleScene(gameEngine);
     const randomPoints = new RandomPoints(gameEngine);
-    const croppedImageSc = new CroppedImageScene(gameEngine);
+    const spriteScene = new SpriteScene(gameEngine);
 
     var sceneId = 0;
     const scenes = [
         exampleScene,
         randomPoints,
-        croppedImageSc
+        spriteScene
     ];
 
     gameEngine.setScene(scenes[sceneId]);
+    document.title = gameEngine.currentScene.name;
 
     gameEngine.start();
 
     document.getElementById("sceneSelect").addEventListener("change", (e) => {
         gameEngine.setScene(scenes[parseInt(e.target.value)]);
+        document.title = gameEngine.currentScene.name;
     });
 </script>
 

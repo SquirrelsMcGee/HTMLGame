@@ -2,6 +2,8 @@ class RandomPoints extends Scene {
     constructor(engine) {
         super(engine);
 
+        this.name = "Random Points";
+
         this.positions = [];
 
         this.setup();

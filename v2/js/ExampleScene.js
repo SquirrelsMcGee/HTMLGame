@@ -2,6 +2,8 @@ class ExampleScene extends Scene {
     constructor(engine) {
         super(engine);
 
+        this.name = "Example Scene";
+        
         this.setup();
     }
 
