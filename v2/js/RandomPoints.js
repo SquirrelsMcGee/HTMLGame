@@ -28,5 +28,4 @@ class RandomPoints extends Scene {
     update(time) {
 
     }
-
 }
