@@ -12,10 +12,12 @@ class SpriteSheet {
         this.imagePath = imagePath;
 
         this.ready = false;
-        this.spriteSize = spriteSize;
-        this.sheetRange = sheetRange;
+        this.spriteSize = Object.assign({}, spriteSize);
+        this.sheetRange = Object.assign({}, sheetRange);
 
         this.sheetIndex = { x: 0, y: 0 }; // Used for indexing the sprite sheet
+
+        this.invertAxis = { x: false, y: false };
 
         // Create image
         this.image = document.createElement('img');
@@ -27,7 +29,7 @@ class SpriteSheet {
     }
 
     get sheetOffsets() {
-        return { x: (this.spriteSize.x * this.sheetIndex), y: (this.spriteSize.y * this.sheetIndex.y) };
+        return { x: (this.spriteSize.width * this.sheetIndex.x), y: (this.spriteSize.height * this.sheetIndex.y) };
     }
 
     nextHorizontal() {
@@ -41,7 +43,7 @@ class SpriteSheet {
     }
 
     nextVertical() {
-        this.sheetIndex.x += 1;
+        this.sheetIndex.y += 1;
         if (this.sheetIndex.y >= this.sheetRange.y) this.sheetIndex.y = 0;
     }
 
@@ -53,16 +55,29 @@ class SpriteSheet {
     draw(position, renderSize) {
 
         // renderSize: Draws the sprite at a different size to the actual image dimensions
-        if (renderSize == undefined) renderSize = this.spriteSize;
 
-        // Wowie
+        if (renderSize == undefined) renderSize = this.spriteSize;
+        let offsets = this.sheetOffsets;
+
+        if (this.invertAxis.x) {
+            this.engine.ctx.translate(renderSize.width + position.x, 0);
+            this.engine.ctx.scale(-1, 1);
+        }
+
+        if (this.invertAxis.y) {
+            this.engine.ctx.translate(0, renderSize.height + position.y);
+            this.engine.ctx.scale(1, -1);
+        }
+
         this.engine.ctx.drawImage(
             this.image,
             this.sheetOffsets.x, this.sheetOffsets.y,
-            this.spriteSize.x, this.spriteSize.y,
+            this.spriteSize.width, this.spriteSize.height,
             position.x, position.y,
-            this.renderSize.x, this.renderSize.y
+            renderSize.width, renderSize.height
         );
+
+        this.engine.ctx.resetTransform();
     }
 
 }
