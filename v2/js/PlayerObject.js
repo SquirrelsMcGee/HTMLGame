@@ -5,7 +5,7 @@ class PlayerObject extends GameObject {
 
         this.velocity = { x: 0, y: 0 };
 
-        this.size = { width: 50, height: 50};
+        this.size = { width: 64, height: 128};
         this.color = "#000000";
         this.lineWidth = "5";
 
@@ -17,6 +17,12 @@ class PlayerObject extends GameObject {
 
         this.isHover = false;
         this.isClicked = false;
+
+        this.spriteSheet = new SpriteSheet(this.engine, "./img/sprite_walking.png", {width: 64, height: 128}, {x: 9, y: 1});
+        this.spriteSheet.invertAxis = { x: false, y: false };
+
+        this.deltaTime = 0;
+        this.lastTime = 0;
 
         this.addCollider();
 
@@ -33,20 +39,38 @@ class PlayerObject extends GameObject {
 
     update(time) {
 
+        // Wait for the sprite sheet to load
+        if (this.spriteSheet.ready == false) return;
+
+        // Used to limit the animation rate to 100ms/frame
+        this.deltaTime += (time - this.lastTime);
+        this.lastTime = time;
+
+        if (this.deltaTime >= 100) {
+            this.deltaTime = 0;
+            this.spriteSheet.nextHorizontal();
+        }
+
         // Apply gravity
         this.velocity.y += -0.5;
 
         // Get Inputs
         if (this.engine.inputManager.getInput("Space") && this.isGrounded) {
-            this.velocity.y = 10.0;
+            this.velocity.y = 13.0;
             this.isGrounded = false;
         }
 
         if (this.engine.inputManager.getInput("KeyA")) {
             this.velocity.x -= 0.2;
+            this.spriteSheet.invertAxis.x = true;
         }
         if (this.engine.inputManager.getInput("KeyD")) {
             this.velocity.x += 0.2;
+            this.spriteSheet.invertAxis.x = false;
+        }
+
+        if (this.engine.inputManager.getInput("KeyA") == false && this.engine.inputManager.getInput("KeyD") == false) {
+            this.spriteSheet.sheetIndex.x = 0;
         }
 
         this.isHover = this.inBounds(this.engine.inputManager.mousePos);
@@ -90,10 +114,6 @@ class PlayerObject extends GameObject {
                     let right = this.transform.position.x > gameObj.transform.position.x;
                     let below = this.transform.position.y > gameObj.transform.position.y + (gameObj.collider.size.height * 0.5);
                     let above = this.transform.position.y + this.collider.size.height < gameObj.transform.position.y;
-
-                    //console.log(this.transform.position.y, (gameObj.transform.position.y + gameObj.collider.size.height));
-
-                    console.log(left, right, above, below, this.velocity.y, this.velocity.x);
 
 
                     if (above) {
@@ -180,12 +200,18 @@ class PlayerObject extends GameObject {
     }
 
     draw() {
+
+        this.spriteSheet.draw({x:this.transform.position.x, y: this.transform.position.y});
+
+        //this.collider.draw();
+
+        /*
         this.ctx.beginPath();
         this.ctx.lineWidth = this.lineWidth;
         this.ctx.strokeStyle = this.color;
         this.ctx.rect(this.transform.position.x, this.transform.position.y, this.size.width, this.size.height);
         this.ctx.stroke();
-
+        */
         this.ctx.strokeStyle = "#000000";
     }
 

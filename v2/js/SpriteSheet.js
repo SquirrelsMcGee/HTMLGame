@@ -60,15 +60,19 @@ class SpriteSheet {
         let offsets = this.sheetOffsets;
 
         if (this.invertAxis.x) {
-            this.engine.ctx.translate(renderSize.width + position.x, 0);
+            this.engine.ctx.translate((renderSize.width/2) + position.x, 0);
             this.engine.ctx.scale(-1, 1);
+            this.engine.ctx.translate(-((renderSize.width/2) + position.x), 0);
         }
 
         if (this.invertAxis.y) {
-            this.engine.ctx.translate(0, renderSize.height + position.y);
+            this.engine.ctx.translate(0, (renderSize.height/2) + position.y);
             this.engine.ctx.scale(1, -1);
+            this.engine.ctx.translate(0, -((renderSize.height/2) + position.y));
         }
 
+        //this.engine.ctx.strokeRect(position.x, position.y, 4, 4);
+;
         this.engine.ctx.drawImage(
             this.image,
             this.sheetOffsets.x, this.sheetOffsets.y,

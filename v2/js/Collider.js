@@ -43,14 +43,12 @@ class Collider {
         if (interaction != undefined) {
             collisionExists = interaction(c1, c2);
         }
-
-        c1.draw(); c2.draw();
-
+        
         return collisionExists;
     }
 
     draw() {
-
+        // Default
     }
 }
 
@@ -77,6 +75,16 @@ class RectCollider extends Collider {
         if (size == undefined) size = { width: 0, height: 0 };
 
         this.size = Object.assign({}, size);
+    }
+
+    draw() {
+        let ctx = this.parent.engine.ctx;
+        ctx.beginPath();
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = "black";
+        ctx.rect(this.parent.transform.position.x, this.parent.transform.position.y, this.size.width, this.size.height);
+        ctx.stroke();
+        ctx.resetTransform();
     }
 }
 

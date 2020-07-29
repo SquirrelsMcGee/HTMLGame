@@ -42,6 +42,7 @@
 <script src="./js/SpriteScene.js"></script>
 
 <script src="./js/PlayerObject.js"></script>
+<script src="./js/BlockObject.js"></script>
 
 <script type="text/javascript">
     /* Main Entry Point */
@@ -62,6 +63,7 @@
     ];
 
     gameEngine.setScene(scenes[sceneId]);
+
     document.title = gameEngine.currentScene.name;
 
     gameEngine.start();
